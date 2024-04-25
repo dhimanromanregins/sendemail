@@ -1,0 +1,51 @@
+.data-forms {
+  margin: 15px;
+  text-align: center;
+}
+
+.data-forms .heading {
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.data-forms .form {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px 0px;
+}
+
+.data-forms .options .add-user-btn {
+  display: inline;
+  position: relative;
+}
+
+.data-forms .options button {
+  width: 90px;
+  height: 30px;
+  margin-right: 15px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.data-forms .form .delete-form {
+  cursor: pointer;
+  border: 1px solid black;
+  padding: 3px;
+  border-radius: 50%;
+  width: 16px;
+}
+
+.data-forms .form .delete-form:hover {
+  background-color: red;
+  color: white;
+  border-color: white;
+}
+
+.data-forms .options .added {
+  position: absolute;
+  display: none;
+  color: green;
+  left: 35px;
+  transform: translate(5px, 2px);
+}
