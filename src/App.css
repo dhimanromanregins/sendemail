@@ -49,3 +49,7 @@
   left: 35px;
   transform: translate(5px, 2px);
 }
+textarea{
+  width: 100%;
+  height: 200px;
+}
