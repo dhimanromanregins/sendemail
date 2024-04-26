@@ -1,0 +1,64 @@
+.send-group-email-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+  }
+  
+  .warning-text {
+    margin-bottom: 20px;
+    color: red;
+  }
+  
+  .group-select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    appearance: none; /* Remove default appearance */
+    background-image: url('data:image/svg+xml,\
+      <svg fill="#000000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px" height="24px"><path d="M7 10l5 5 5-5H7z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* Add custom arrow */
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 24px;
+  }
+  
+  .select-container {
+    margin-bottom: 20px;
+  }
+  
+  .send-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .send-button.disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+
+  .select-container {
+    margin-bottom: 20px; /* Add margin for spacing */
+  }
+  
+  .select-container select {
+    width: 100%; /* Make the select element fill its container */
+    padding: 10px; /* Add padding for better appearance */
+    font-size: 16px; /* Adjust font size */
+    border: 1px solid #ccc; /* Add a border */
+    border-radius: 5px; /* Add border radius for rounded corners */
+    background-color: #fff; /* Set background color */
+    color: #333; /* Set text color */
+  }
+  
+  /* Style the options */
+  .select-container select option {
+    background-color: #fff; /* Set background color */
+    color: #333; /* Set text color */
+  }

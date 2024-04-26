@@ -1,55 +1,199 @@
+
+/* Menu Dropdown */
+.cf:before,
+.cf:after {
+    content: " ";
+    display: table;
+}
+
+.cf:after {
+    clear: both;
+}
+
+.cf {
+    /* *zoom:1; */
+}
+
+.menu,
+.submenu {
+ margin: 0;
+ padding: 0;
+ list-style: none;
+}
+
+.menu {   
+ margin: 50px auto;
+ width: 800px;   
+ width: -moz-fit-content;
+ width: -webkit-fit-content;
+ width: fit-content; 
+}
+
+.menu > li {
+ background: #000;
+ float: left;
+ position: relative;
+ transform: skewX(25deg);
+}
+
+.menu a {
+ display: block;
+ color: #fff;
+ text-transform: uppercase;
+ text-decoration: none;
+ font-family: Arial, Helvetica;
+ font-size: 14px;
+}  
+
+.menu li:hover {
+ background: #e74c3c;
+}  
+
+.menu > li > a {
+ transform: skewX(-25deg);
+ padding: 1em 2em;
+}
+
+/* Dropdown */
+.submenu {
+ position: absolute;
+ width: 200px;
+ left: 50%; margin-left: -100px;
+ transform: skewX(-25deg);
+ transform-origin: left top;
+}
+
+.submenu li {
+ background-color: #34495e;
+ position: relative;
+ overflow: hidden;  
+}      
+
+.submenu > li > a {
+ padding: 1em 2em;   
+}
+
+.submenu > li::after {
+ content: '';
+ position: absolute;
+ top: -125%;
+ height: 100%;
+ width: 100%;   
+ box-shadow: 0 0 50px rgba(0, 0, 0, .9);   
+}  
+
+.submenu > li:nth-child(odd){
+ transform: skewX(-25deg) translateX(0);
+}
+
+.submenu > li:nth-child(odd) > a {
+ transform: skewX(25deg);
+}
+
+.submenu > li:nth-child(odd)::after {
+ right: -50%;
+ transform: skewX(-25deg) rotate(3deg);
+}    
+
+.submenu > li:nth-child(even){
+ transform: skewX(25deg) translateX(0);
+}
+
+.submenu > li:nth-child(even) > a {
+ transform: skewX(-25deg);
+}
+
+.submenu > li:nth-child(even)::after {
+ left: -50%;
+ transform: skewX(25deg) rotate(3deg);
+}
+
+/* Show dropdown */
+.submenu,
+.submenu li {
+ opacity: 0;
+ visibility: hidden;   
+}
+
+.submenu li {
+ transition: .2s ease transform;
+}
+
+.menu > li:hover .submenu,
+.menu > li:hover .submenu li {
+ opacity: 1;
+ visibility: visible;
+}  
+
+.menu > li:hover .submenu li:nth-child(even){
+ transform: skewX(25deg) translateX(15px);   
+}
+
+.menu > li:hover .submenu li:nth-child(odd){
+ transform: skewX(-25deg) translateX(-15px);   
+}
+
+
+/* Style for the container */
 .data-forms {
-  margin: 15px;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for the heading */
+.heading {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Style for the form */
+.forms {
+  margin-bottom: 20px;
+}
+
+/* Style for the form inputs */
+.form input[type="text"],
+.form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+/* Style for the send button */
+.send {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 113px;
+}
+
+.send:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.options {
+  align-items: center;
   text-align: center;
 }
 
-.data-forms .heading {
-  font-weight: bold;
-  font-size: 30px;
+.data-forms {
+  text-align: center;
 }
 
-.data-forms .form {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin: 20px 0px;
-}
-
-.data-forms .options .add-user-btn {
-  display: inline;
-  position: relative;
-}
-
-.data-forms .options button {
-  width: 90px;
-  height: 30px;
-  margin-right: 15px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.data-forms .form .delete-form {
-  cursor: pointer;
-  border: 1px solid black;
-  padding: 3px;
-  border-radius: 50%;
-  width: 16px;
-}
-
-.data-forms .form .delete-form:hover {
-  background-color: red;
-  color: white;
-  border-color: white;
-}
-
-.data-forms .options .added {
-  position: absolute;
-  display: none;
-  color: green;
-  left: 35px;
-  transform: translate(5px, 2px);
-}
-textarea{
-  width: 100%;
-  height: 200px;
+textarea#email {
+  height: 109px;
 }

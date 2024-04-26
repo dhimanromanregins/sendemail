@@ -10,6 +10,12 @@
       content="Web site created using create-react-app"
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
@@ -39,5 +45,179 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+
+    <script>
+      gsap.registerPlugin(Draggable);
+      document.addEventListener("DOMContentLoaded", async () => {
+        // Get Wobbly Element
+        const svg = document.querySelector(".blob");
+        const path = document.getElementById("line");
+        const wobbleAmount = 4;
+        var defaultPos = 50;
+        var wasAboveMidpoint = false;
+
+        // Function to update svg's fill appropriately
+        async function colorRenderer() {
+          const interval = 1000 / 60;
+
+          setInterval(() => {
+            const color =
+              path.getAttribute("d").split(" ")[3].split(",")[1] <= 50
+                ? "white"
+                : "var(--primary)";
+            path.setAttribute("fill", color);
+          }, interval);
+        }
+        // Function to restore the element to the baseline
+        async function restoreElement() {
+          return gsap.to(path, {
+            attr: { d: `M 0,50 Q 50,${defaultPos} 100,50` },
+            ease: "elastic.out(1, 0.3)",
+            duration: 3,
+          });
+        }
+        // Simplified wobbler function
+        async function wobbleHandler(e) {
+          const svgRect = svg.getBoundingClientRect();
+          const svgMidpointY = svgRect.top + svgRect.height / 2;
+          const mouseY = e.clientY;
+          const isAboveMidpoint = mouseY < svgMidpointY;
+
+          if (e.type == "mouseup") {
+            return restoreElement();
+          }
+
+          if (
+            wasAboveMidpoint !== isAboveMidpoint ||
+            (e.type == "mousedown" && e.type != "mouseup")
+          ) {
+            isAboveMidpoint
+              ? gsap.to(path, {
+                  attr: {
+                    d: `M 0,50 Q 50,${defaultPos - wobbleAmount} 100,50`,
+                  },
+                  ease: "elastic.out(1.3, 0.3)",
+                  duration: 3,
+                })
+              : gsap.to(path, {
+                  attr: {
+                    d: `M 0,50 Q 50,${defaultPos + wobbleAmount} 100,50`,
+                  },
+                  ease: "elastic.out(1.3, 0.3)",
+                  duration: 3,
+                });
+
+            if (e.type != "mousedown") {
+              setTimeout(() => {
+                restoreElement();
+              }, 50);
+            }
+          }
+
+          wasAboveMidpoint = isAboveMidpoint;
+        }
+
+        // Resize navbar logic
+        async function navUpdate() {
+          if (window.innerWidth >= 768) defaultPos = 50;
+          else defaultPos = 55;
+
+          restoreElement();
+        }
+
+        // Mouse Wobbler
+        document.addEventListener("mousedown", wobbleHandler);
+        document.addEventListener("mouseup", wobbleHandler);
+        document.addEventListener("mousemove", wobbleHandler);
+
+        // bind resize logic
+        window.onresize = navUpdate;
+        navUpdate();
+        colorRenderer();
+
+        const carouselWrapper = document.getElementById("carousel-wrapper");
+        const carousel = carouselWrapper.querySelector("div");
+        const items = Array.from(carousel.children);
+        let itemWidth, gap, totalWidth, viewportWidth, maxScroll;
+
+        // Function to update dimensions
+        function updateDimensions() {
+          itemWidth = items[0].offsetWidth;
+          gap = parseInt(window.getComputedStyle(carousel).gap, 10);
+          totalWidth = (itemWidth + gap) * items.length - gap;
+          viewportWidth = carouselWrapper.offsetWidth;
+          maxScroll = -(totalWidth - viewportWidth);
+          draggable[0].applyBounds({ minX: maxScroll, maxX: 0 }); // Update bounds dynamically
+          updateItemsBasedOnCurve();
+        }
+
+        // Function to update items based on curve
+        function updateItemsBasedOnCurve(
+          xPosition = gsap.getProperty(carousel, "x")
+        ) {
+          items.forEach((item) => {
+            const itemCenter = item.offsetLeft + itemWidth / 2 + xPosition;
+            const diff = Math.abs(viewportWidth / 2 - itemCenter);
+            const translateY = Math.max(0, 25 - (diff / viewportWidth) * 50);
+            const fadeZone = viewportWidth * 0.15;
+            const distanceFromEdge = Math.min(
+              itemCenter,
+              viewportWidth - itemCenter
+            );
+
+            let opacity;
+            if (distanceFromEdge > fadeZone) {
+              opacity = 1;
+            } else {
+              opacity = distanceFromEdge / fadeZone;
+            }
+
+            gsap.to(item, {
+              y: translateY,
+              opacity: opacity,
+              ease: "none",
+              duration: 0.1,
+              overwrite: "auto",
+            });
+          });
+        }
+
+        // Initialize draggable with real-time curve adjustments
+        const draggable = Draggable.create(carousel, {
+          type: "x",
+          inertia: true,
+          onDrag: () => updateItemsBasedOnCurve(),
+          onThrowUpdate: () => updateItemsBasedOnCurve(),
+        });
+
+        // Center item and update curve
+        function centerItem(item) {
+          const itemIndex = items.indexOf(item);
+          let newX =
+            viewportWidth / 2 - (itemIndex * (itemWidth + gap) + itemWidth / 2);
+          newX = Math.min(newX, 0);
+          newX = Math.max(newX, maxScroll);
+
+          gsap.to(carousel, {
+            x: newX,
+            duration: 0.5,
+            onUpdate: () => updateItemsBasedOnCurve(newX),
+          });
+        }
+
+        // Add click event to each item
+        items.forEach((item) => {
+          item.addEventListener("click", () => centerItem(item));
+        });
+
+        // Initial dimension calculation and curve update
+        updateDimensions();
+
+        // Recalculate and apply curve on window resize
+        window.addEventListener("resize", () => {
+          updateDimensions();
+        });
+      });
+    </script>
   </body>
 </html>
